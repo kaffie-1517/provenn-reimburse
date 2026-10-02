@@ -22,8 +22,12 @@ class Settings(BaseSettings):
     s3_secret_key: str | None = "provenn-secret"
     s3_bucket: str = "provenn"
 
+    # Public URL of the web app; when set, invoice QR codes link to its status page.
+    public_web_url: str | None = None
+
     run_worker: bool = False  # run the job loop inside the api process
     worker_poll_seconds: float = 1.0
+    worker_metrics_port: int = 8001
     max_upload_mb: int = 20
 
     @model_validator(mode="after")
