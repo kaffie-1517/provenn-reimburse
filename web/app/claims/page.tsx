@@ -201,7 +201,7 @@ export default function ClaimsPage() {
             </Empty>
           ) : (
             <div className={t.scroll}>
-              <table className={t.table}>
+              <table className={`${t.table} ${t.stack}`}>
                 <thead>
                   <tr>
                     <th>Invoice</th>
@@ -213,7 +213,7 @@ export default function ClaimsPage() {
                 </thead>
                 <tbody>
                   {data.items.map((v) => (
-                    <tr key={v.id}>
+                    <tr key={v.id} className={s.claimRow}>
                       <td className={t.truncate}>
                         <span className={t.primaryCell}>
                           {v.invoice?.vendor_name ?? v.file_name ?? "Unknown file"}

@@ -295,7 +295,7 @@ export default function ReviewPage() {
         ) : (
           <>
             <div className={t.scroll}>
-              <table className={t.table}>
+              <table className={`${t.table} ${t.stack}`}>
                 <thead>
                   <tr>
                     <th>Employee</th>

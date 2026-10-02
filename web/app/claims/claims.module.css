@@ -153,3 +153,27 @@
     padding: var(--s-4) 0 0;
   }
 }
+
+@media (max-width: 720px) {
+  .claimRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "invoice amount"
+      "check approval";
+  }
+
+  .claimRow td:nth-child(1) {
+    grid-area: invoice;
+  }
+  .claimRow td:nth-child(2) {
+    grid-area: amount;
+    font-weight: 500;
+  }
+  .claimRow td:nth-child(3) {
+    grid-area: check;
+  }
+  .claimRow td:nth-child(4) {
+    grid-area: approval;
+    text-align: right;
+  }
+}

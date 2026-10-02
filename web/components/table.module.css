@@ -114,3 +114,39 @@
     display: none;
   }
 }
+
+/* Stacked rows on small screens: each page assigns cells to grid areas. */
+@media (max-width: 720px) {
+  .stack thead {
+    display: none;
+  }
+
+  .stack,
+  .stack tbody {
+    display: block;
+  }
+
+  .stack tbody tr {
+    display: grid;
+    gap: 6px var(--s-3);
+    padding: var(--s-3) var(--s-4);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .stack tbody tr:last-child {
+    border-bottom: 0;
+  }
+
+  .stack .hideSm {
+    display: none !important;
+  }
+
+  .stack td {
+    display: block;
+    height: auto !important;
+    padding: 0 !important;
+    border: 0 !important;
+    max-width: none;
+    min-width: 0;
+  }
+}

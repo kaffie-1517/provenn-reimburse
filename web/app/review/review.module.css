@@ -135,3 +135,52 @@
 .decide button:last-child {
   min-width: 124px;
 }
+
+@media (max-width: 720px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "invoice amount"
+      "who check"
+      "act act";
+  }
+
+  .row td:nth-child(1) {
+    grid-area: who;
+    color: var(--text-2);
+    font-size: var(--fs-sm);
+  }
+  .row td:nth-child(2) {
+    grid-area: invoice;
+  }
+  .row td:nth-child(3) {
+    grid-area: amount;
+    font-weight: 500;
+  }
+  .row td:nth-child(4) {
+    grid-area: check;
+    text-align: right;
+  }
+  .row td:nth-child(6) {
+    grid-area: act;
+    text-align: left !important;
+    padding-top: 4px !important;
+  }
+
+  .row td:nth-child(6) .decide {
+    justify-content: flex-start;
+  }
+
+  .detailRow {
+    display: block !important;
+    background: var(--sunken);
+  }
+
+  .detailRow td {
+    padding: var(--s-3) var(--s-4) !important;
+  }
+
+  .details {
+    padding-left: 0;
+  }
+}
