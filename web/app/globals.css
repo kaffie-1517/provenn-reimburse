@@ -1,0 +1,212 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   Tokens. Warm, low-chroma "muddy" palette: sand, umber, moss, clay, ochre.
+   Light by default, dark via prefers-color-scheme or [data-theme].
+   ───────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --bg: #efeae2;
+  --surface: #f8f5f0;
+  --sunken: #e7e0d5;
+  --hover: #e9e3d9;
+  --line: #d8cec0;
+  --line-strong: #c4b8a7;
+
+  --text: #2a241e;
+  --text-2: #6b6154;
+  --text-3: #8e8374;
+
+  --accent: #56653a;
+  --accent-hover: #4a5832;
+  --accent-text: #f5f2ea;
+  --accent-soft: #e0e2cc;
+
+  --ok: #4b7743;
+  --ok-soft: #dfe8d6;
+  --bad: #a2462f;
+  --bad-soft: #f1ddd5;
+  --warn: #946619;
+  --warn-soft: #f0e3c8;
+
+  --focus: #56653a;
+  --shadow-overlay: 0 1px 2px rgb(42 36 30 / 0.06), 0 8px 24px rgb(42 36 30 / 0.12);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Type scale */
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-md: 14px;
+  --fs-lg: 16px;
+  --fs-xl: 20px;
+  --fs-2xl: 28px;
+  --fs-3xl: 40px;
+
+  /* 4px spacing scale */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-10: 40px;
+  --s-12: 48px;
+  --s-16: 64px;
+
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 8px;
+
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --dur: 140ms;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1a1714;
+    --surface: #211d19;
+    --sunken: #16130f;
+    --hover: #2a251f;
+    --line: #342e27;
+    --line-strong: #463e35;
+    --text: #ece5da;
+    --text-2: #a69b8a;
+    --text-3: #7f7566;
+    --accent: #a3b37a;
+    --accent-hover: #b3c28b;
+    --accent-text: #1a1714;
+    --accent-soft: #2f3324;
+    --ok: #8cb57f;
+    --ok-soft: #26301f;
+    --bad: #dc7c60;
+    --bad-soft: #3a231c;
+    --warn: #d4a75c;
+    --warn-soft: #362b18;
+    --focus: #a3b37a;
+    --shadow-overlay: 0 1px 2px rgb(0 0 0 / 0.3), 0 12px 32px rgb(0 0 0 / 0.45);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #1a1714;
+  --surface: #211d19;
+  --sunken: #16130f;
+  --hover: #2a251f;
+  --line: #342e27;
+  --line-strong: #463e35;
+  --text: #ece5da;
+  --text-2: #a69b8a;
+  --text-3: #7f7566;
+  --accent: #a3b37a;
+  --accent-hover: #b3c28b;
+  --accent-text: #1a1714;
+  --accent-soft: #2f3324;
+  --ok: #8cb57f;
+  --ok-soft: #26301f;
+  --bad: #dc7c60;
+  --bad-soft: #3a231c;
+  --warn: #d4a75c;
+  --warn-soft: #362b18;
+  --focus: #a3b37a;
+  --shadow-overlay: 0 1px 2px rgb(0 0 0 / 0.3), 0 12px 32px rgb(0 0 0 / 0.45);
+  color-scheme: dark;
+}
+
+/* ── Base ─────────────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--fs-md);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "cv11", "ss01";
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  letter-spacing: -0.011em;
+  text-wrap: balance;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  text-decoration-color: currentColor;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+code,
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  font-variant-ligatures: none;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}

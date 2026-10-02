@@ -1,0 +1,360 @@
+.page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 var(--s-6);
+}
+
+.nav {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+.navLink {
+  font-size: var(--fs-md);
+  color: var(--text-2);
+  text-decoration: none;
+  padding: 0 var(--s-2);
+}
+
+.navLink:hover {
+  color: var(--text);
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────── */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: var(--s-16);
+  align-items: center;
+  padding: var(--s-16) 0 var(--s-16);
+}
+
+.heroCopy {
+  display: grid;
+  gap: var(--s-5);
+}
+
+.eyebrow {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.headline {
+  font-size: var(--fs-3xl);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  max-width: 16ch;
+}
+
+.lede {
+  color: var(--text-2);
+  font-size: var(--fs-lg);
+  line-height: 1.6;
+  max-width: 52ch;
+}
+
+/* ── Lookup ───────────────────────────────────────────────────────── */
+
+.lookup {
+  display: grid;
+  gap: var(--s-2);
+  margin-top: var(--s-3);
+  max-width: 440px;
+}
+
+.lookupLabel {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+}
+
+.lookupRow {
+  display: flex;
+  gap: var(--s-2);
+}
+
+.lookupInput {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.lookupPrefix {
+  position: absolute;
+  left: 12px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-md);
+  color: var(--text-3);
+  pointer-events: none;
+}
+
+.lookupInput input {
+  width: 100%;
+  height: 36px;
+  padding: 0 12px 0 52px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: var(--fs-md);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition:
+    border-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+
+.lookupInput input::placeholder {
+  color: var(--text-3);
+}
+
+.lookupInput input:hover {
+  border-color: var(--line-strong);
+}
+
+.lookupInput input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.lookupInput input[aria-invalid="true"] {
+  border-color: var(--bad);
+}
+
+.lookupError {
+  font-size: var(--fs-xs);
+  color: var(--bad);
+}
+
+/* ── Specimen ─────────────────────────────────────────────────────── */
+
+.specimen {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  font-size: var(--fs-sm);
+}
+
+.specHead {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+  padding: var(--s-3) var(--s-4);
+  border-bottom: 1px solid var(--line);
+  font-weight: 500;
+}
+
+.specMeta {
+  color: var(--text-2);
+  font-weight: 400;
+}
+
+.specRows {
+  margin: 0;
+}
+
+.specRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "label status"
+    "hash status";
+  column-gap: var(--s-4);
+  row-gap: 2px;
+  padding: var(--s-3) var(--s-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.specRow dt {
+  grid-area: label;
+  color: var(--text-2);
+  display: flex;
+  gap: var(--s-2);
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.specRow dd {
+  margin: 0;
+}
+
+.specRow dd:nth-of-type(1) {
+  grid-area: hash;
+  color: var(--text);
+}
+
+.specRow dd:nth-of-type(2) {
+  grid-area: status;
+  align-self: center;
+  font-weight: 500;
+}
+
+.specSub {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+}
+
+.specNote {
+  color: var(--text-3);
+  font-weight: 400 !important;
+}
+
+.specOk {
+  color: var(--ok);
+}
+
+.specBad {
+  color: var(--bad);
+}
+
+.diff {
+  background: var(--bad-soft);
+  color: var(--bad);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+.specCaption {
+  padding: var(--s-3) var(--s-4);
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+}
+
+/* ── Sections ─────────────────────────────────────────────────────── */
+
+.section {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: var(--s-8);
+  padding: var(--s-12) 0;
+  border-top: 1px solid var(--line);
+}
+
+.sectionTitle {
+  font-size: var(--fs-md);
+  color: var(--text-2);
+  font-weight: 500;
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-8);
+}
+
+.step {
+  display: grid;
+  gap: var(--s-2);
+  align-content: start;
+}
+
+.step h3 {
+  font-size: var(--fs-lg);
+}
+
+.step p {
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+.stepNo {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+}
+
+.audience {
+  margin: 0;
+  display: grid;
+}
+
+.audienceRow {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: var(--s-4);
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.audienceRow:first-child {
+  padding-top: 0;
+}
+
+.audienceRow:last-child {
+  border-bottom: 0;
+}
+
+.audienceRow dt {
+  font-weight: 500;
+}
+
+.audienceRow dd {
+  margin: 0;
+  color: var(--text-2);
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  padding: var(--s-6) 0 var(--s-10);
+  border-top: 1px solid var(--line);
+  color: var(--text-3);
+  font-size: var(--fs-sm);
+}
+
+/* ── Responsive ───────────────────────────────────────────────────── */
+
+@media (max-width: 960px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: var(--s-10);
+    padding: var(--s-10) 0 var(--s-12);
+  }
+
+  .section {
+    grid-template-columns: 1fr;
+    gap: var(--s-4);
+  }
+}
+
+@media (max-width: 720px) {
+  .page {
+    padding: 0 var(--s-4);
+  }
+
+  .headline {
+    font-size: var(--fs-2xl);
+  }
+
+  .lede {
+    font-size: var(--fs-md);
+  }
+
+  .steps {
+    grid-template-columns: 1fr;
+    gap: var(--s-6);
+  }
+
+  .audienceRow {
+    grid-template-columns: 1fr;
+    gap: var(--s-1);
+  }
+}

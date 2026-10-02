@@ -1,0 +1,208 @@
+.frame {
+  min-height: 100dvh;
+}
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+
+.barInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 52px;
+  padding: 0 var(--s-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+}
+
+.barLeft,
+.barRight {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-width: 0;
+}
+
+.context {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--text-2);
+  font-size: var(--fs-md);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slash {
+  color: var(--line-strong);
+  font-size: var(--fs-lg);
+}
+
+/* ── Account menu ─────────────────────────────────────────────────── */
+
+.account {
+  position: relative;
+}
+
+.accountButton {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  height: 32px;
+  padding: 0 var(--s-2) 0 4px;
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  background: none;
+  cursor: pointer;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  transition: background-color var(--dur) var(--ease);
+}
+
+.accountButton:hover,
+.accountButton[aria-expanded="true"] {
+  background: var(--hover);
+  color: var(--text);
+}
+
+.avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+
+.accountEmail {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  min-width: 240px;
+  padding: 4px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: var(--shadow-overlay);
+  animation: pop var(--dur) var(--ease);
+  transform-origin: top right;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(-2px);
+  }
+}
+
+.menuHeader {
+  display: grid;
+  gap: 2px;
+  padding: var(--s-2) var(--s-2) 10px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 4px;
+}
+
+.menuEmail {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.menuRole {
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+}
+
+.menuItem {
+  width: 100%;
+  text-align: left;
+  height: 32px;
+  padding: 0 var(--s-2);
+  border: 0;
+  border-radius: var(--r-md);
+  background: none;
+  cursor: pointer;
+}
+
+.menuItem:hover,
+.menuItem:focus-visible {
+  background: var(--hover);
+}
+
+/* ── Page ─────────────────────────────────────────────────────────── */
+
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--s-8) var(--s-6) var(--s-16);
+}
+
+.pageHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--s-4);
+  margin-bottom: var(--s-6);
+}
+
+.titles {
+  display: grid;
+  gap: var(--s-1);
+  min-width: 0;
+}
+
+.title {
+  font-size: var(--fs-xl);
+}
+
+.description {
+  color: var(--text-2);
+}
+
+.actions {
+  display: flex;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+@media (max-width: 720px) {
+  .barInner {
+    padding: 0 var(--s-4);
+  }
+
+  .accountEmail {
+    display: none;
+  }
+
+  .main {
+    padding: var(--s-6) var(--s-4) var(--s-12);
+  }
+
+  .pageHead {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions {
+    justify-content: flex-start;
+  }
+}
