@@ -16,6 +16,7 @@ from sqlalchemy import text  # noqa: E402
 from app import db  # noqa: E402
 from app.main import create_app  # noqa: E402
 from app.models import Base  # noqa: E402
+from app.storage import MemoryStorage, get_storage  # noqa: E402
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -36,8 +37,15 @@ async def clean(schema):
 
 
 @pytest.fixture
-def app():
-    return create_app()
+def storage():
+    return MemoryStorage()
+
+
+@pytest.fixture
+def app(storage):
+    application = create_app()
+    application.dependency_overrides[get_storage] = lambda: storage
+    return application
 
 
 @pytest.fixture
@@ -66,6 +74,9 @@ class Auth:
         code = admin["user"]["join_code"]
         emp = await self.register(f"emp@{name}.example.com", "employee", join_code=code)
         return _h(admin), _h(emp)
+
+    async def provider(self, email: str = "provider@example.com") -> dict:
+        return _h(await self.register(email, "provider"))
 
 
 def _h(session: dict) -> dict:
