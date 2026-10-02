@@ -7,6 +7,7 @@ os.environ.setdefault(
         "TEST_DATABASE_URL", "postgresql+asyncpg://provenn:provenn@localhost:5432/provenn_test"
     ),
 )
+os.environ.setdefault("BCRYPT_ROUNDS", "4")  # fast hashing in tests only
 os.environ.setdefault("JWT_SECRET", "test-secret-0123456789abcdef0123456789")
 
 import pytest  # noqa: E402

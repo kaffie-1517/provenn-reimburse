@@ -12,7 +12,8 @@ _ALG = "HS256"
 
 
 def hash_secret(plain: str) -> str:
-    return bcrypt.hashpw(plain.encode(), bcrypt.gensalt()).decode()
+    rounds = get_settings().bcrypt_rounds
+    return bcrypt.hashpw(plain.encode(), bcrypt.gensalt(rounds)).decode()
 
 
 def verify_secret(plain: str, hashed: str) -> bool:

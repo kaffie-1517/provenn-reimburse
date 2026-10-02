@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+asyncpg://provenn:provenn@localhost:5432/provenn"
     jwt_secret: str = DEV_JWT_SECRET
     jwt_ttl_hours: int = 12
+    bcrypt_rounds: int = Field(12, ge=4, le=15)
     cors_origins: str = "http://localhost:3000"
 
     # S3-compatible storage. Leave the keys empty on AWS to use the instance role.
