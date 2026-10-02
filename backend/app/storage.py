@@ -2,6 +2,7 @@
 
 import asyncio
 from functools import lru_cache
+from pathlib import Path
 from typing import Protocol
 
 import boto3
@@ -55,6 +56,37 @@ class S3Storage:
         return await asyncio.to_thread(_get)
 
 
+class LocalStorage:
+    """Files on local disk. For development and single-server deployments."""
+
+    def __init__(self, root: str) -> None:
+        self.root = Path(root).resolve()
+        self.root.mkdir(parents=True, exist_ok=True)
+
+    def _path(self, key: str) -> Path:
+        path = (self.root / key).resolve()
+        if not path.is_relative_to(self.root):
+            raise ValueError(f"invalid storage key: {key}")
+        return path
+
+    async def put(self, key: str, data: bytes, content_type: str = "application/pdf") -> None:
+        path = self._path(key)
+
+        def _write() -> None:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            tmp = path.with_suffix(path.suffix + ".tmp")
+            tmp.write_bytes(data)
+            tmp.replace(path)  # atomic: readers never see a half-written file
+
+        await asyncio.to_thread(_write)
+
+    async def get(self, key: str) -> bytes:
+        try:
+            return await asyncio.to_thread(self._path(key).read_bytes)
+        except FileNotFoundError as e:
+            raise NotFound(key) from e
+
+
 class MemoryStorage:
     """In-process store for tests and local experiments."""
 
@@ -73,7 +105,8 @@ class MemoryStorage:
 
 @lru_cache
 def get_storage() -> Storage:
-    return S3Storage()
+    s = get_settings()
+    return LocalStorage(s.storage_dir) if s.storage_dir else S3Storage()
 
 
 def raw_key(invoice_id) -> str:

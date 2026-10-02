@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     bcrypt_rounds: int = Field(12, ge=4, le=15)
     cors_origins: str = "http://localhost:3000"
 
+    # Set to a directory to store PDFs on local disk instead of S3.
+    storage_dir: str | None = None
+
     # S3-compatible storage. Leave the keys empty on AWS to use the instance role.
     s3_endpoint_url: str | None = "http://localhost:9000"
     s3_region: str = "us-east-1"

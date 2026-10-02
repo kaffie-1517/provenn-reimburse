@@ -64,3 +64,15 @@ def test_unreadable_input_is_not_found_not_crash():
 def test_looks_like_pdf():
     assert pdf.looks_like_pdf(invoice_pdf())
     assert not pdf.looks_like_pdf(b"\x89PNG....")
+
+
+async def test_local_storage_round_trip(tmp_path):
+    from app.storage import LocalStorage, NotFound
+
+    store = LocalStorage(str(tmp_path))
+    await store.put("invoices/x/v1.pdf", b"%PDF-1.7 data")
+    assert await store.get("invoices/x/v1.pdf") == b"%PDF-1.7 data"
+    with pytest.raises(NotFound):
+        await store.get("invoices/missing.pdf")
+    with pytest.raises(ValueError):
+        await store.put("../../escape.pdf", b"x")
