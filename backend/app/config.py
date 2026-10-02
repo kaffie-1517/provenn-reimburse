@@ -3,7 +3,7 @@ from functools import lru_cache
 from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-DEV_JWT_SECRET = "dev-only-secret-change-me"
+DEV_JWT_SECRET = "dev-only-secret-change-me-before-deploying!"
 
 
 class Settings(BaseSettings):
@@ -28,8 +28,10 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def _check_production(self) -> "Settings":
-        if self.env == "production" and self.jwt_secret == DEV_JWT_SECRET:
-            raise ValueError("JWT_SECRET must be set when APP_ENV=production")
+        if self.env == "production" and (
+            self.jwt_secret == DEV_JWT_SECRET or len(self.jwt_secret) < 32
+        ):
+            raise ValueError("JWT_SECRET must be set (32+ chars) when APP_ENV=production")
         # Hosts like Render/Neon hand out postgres:// URLs; use the async driver.
         for prefix in ("postgres://", "postgresql://"):
             if self.database_url.startswith(prefix):

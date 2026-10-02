@@ -67,6 +67,8 @@ class Company(Base):
     id: Mapped[uuid.UUID] = _uuid_pk()
     name: Mapped[str] = mapped_column(String(200), unique=True)
     plan: Mapped[str] = mapped_column(String(32), default="starter")
+    # Shared with employees so they can join this company at sign-up.
+    join_code: Mapped[str] = mapped_column(String(12), unique=True)
     created_at: Mapped[datetime] = _created()
 
 

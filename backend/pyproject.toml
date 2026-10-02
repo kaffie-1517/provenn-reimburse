@@ -13,6 +13,7 @@ dependencies = [
     "pillow>=12.3.0",
     "prometheus-client>=0.26.0",
     "pydantic-settings>=2.15.0",
+    "pydantic[email]>=2.13.5",
     "pyjwt>=2.15.1",
     "pypdf>=6.19.0",
     "python-multipart>=0.0.32",
