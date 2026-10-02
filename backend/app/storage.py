@@ -32,7 +32,13 @@ class S3Storage:
             # None → boto3's default chain (env vars, instance role, ...).
             aws_access_key_id=s.s3_access_key or None,
             aws_secret_access_key=s.s3_secret_key or None,
-            config=BotoConfig(signature_version="s3v4", retries={"max_attempts": 3}),
+            config=BotoConfig(
+                signature_version="s3v4",
+                retries={"max_attempts": 3},
+                # Path-style (endpoint/bucket/key) works with MinIO, R2 and
+                # Supabase Storage; AWS S3 accepts it too.
+                s3={"addressing_style": "path"},
+            ),
         )
 
     async def put(self, key: str, data: bytes, content_type: str = "application/pdf") -> None:

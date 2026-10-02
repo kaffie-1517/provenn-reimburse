@@ -76,3 +76,17 @@ async def test_local_storage_round_trip(tmp_path):
         await store.get("invoices/missing.pdf")
     with pytest.raises(ValueError):
         await store.put("../../escape.pdf", b"x")
+
+
+def test_connect_options_for_hosted_postgres():
+    from app.db import connect_options
+
+    url, args = connect_options("postgresql+asyncpg://u:p@db.example.com:5432/app?sslmode=require")
+    assert url == "postgresql+asyncpg://u:p@db.example.com:5432/app" and args == {"ssl": "require"}
+
+    url, args = connect_options("postgresql+asyncpg://u:p@pooler.example.com:6543/postgres")
+    assert args == {"statement_cache_size": 0}
+    assert url.endswith("?prepared_statement_cache_size=0")
+
+    url, args = connect_options("postgresql+asyncpg://u@localhost/app")
+    assert (url, args) == ("postgresql+asyncpg://u@localhost/app", {})

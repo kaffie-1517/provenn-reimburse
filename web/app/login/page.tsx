@@ -9,6 +9,8 @@ import { api, ApiError, type Session } from "@/lib/api";
 import { HOME, useAuth } from "@/lib/auth";
 import s from "../auth.module.css";
 
+// Set NEXT_PUBLIC_DEMO_PASSWORD to show one-click demo logins (public demos only).
+const DEMO_PASSWORD = process.env.NEXT_PUBLIC_DEMO_PASSWORD || "";
 const DEMO = [
   ["Provider", "provider@demo.com"],
   ["Employee", "employee@acme.com"],
@@ -81,26 +83,28 @@ function LoginForm() {
         New here? <Link href="/register">Create an account</Link>
       </p>
 
-      <div className={s.demo}>
-        <p className={s.demoTitle}>Demo accounts · password “password”</p>
-        <div className={s.demoList}>
-          {DEMO.map(([label, demoEmail]) => (
-            <Button
-              key={demoEmail}
-              size="sm"
-              variant="ghost"
-              type="button"
-              onClick={() => {
-                setEmail(demoEmail);
-                setPassword("password");
-                setError(null);
-              }}
-            >
-              {label}
-            </Button>
-          ))}
+      {DEMO_PASSWORD && (
+        <div className={s.demo}>
+          <p className={s.demoTitle}>Try a demo account</p>
+          <div className={s.demoList}>
+            {DEMO.map(([label, demoEmail]) => (
+              <Button
+                key={demoEmail}
+                size="sm"
+                variant="ghost"
+                type="button"
+                onClick={() => {
+                  setEmail(demoEmail);
+                  setPassword(DEMO_PASSWORD);
+                  setError(null);
+                }}
+              >
+                {label}
+              </Button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
