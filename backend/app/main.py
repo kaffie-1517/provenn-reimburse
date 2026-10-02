@@ -11,7 +11,7 @@ from sqlalchemy import text
 from app import db, worker
 from app.config import get_settings
 from app.metrics import MetricsMiddleware
-from app.routers import auth, invoices, verifications
+from app.routers import admin, auth, invoices, verifications
 
 log = logging.getLogger("provenn")
 
@@ -60,6 +60,7 @@ def create_app() -> FastAPI:
     app.include_router(auth.router)
     app.include_router(invoices.router)
     app.include_router(verifications.router)
+    app.include_router(admin.router)
     return app
 
 
