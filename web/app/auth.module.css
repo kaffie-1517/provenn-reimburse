@@ -1,0 +1,99 @@
+.page {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 0 var(--s-6);
+}
+
+.top {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1120px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.center {
+  display: grid;
+  place-items: start center;
+  padding: var(--s-12) 0;
+}
+
+.panel {
+  width: 100%;
+  max-width: 380px;
+  display: grid;
+  gap: var(--s-6);
+}
+
+.head {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.head h1 {
+  font-size: var(--fs-xl);
+}
+
+.head p {
+  color: var(--text-2);
+}
+
+.form {
+  display: grid;
+  gap: var(--s-4);
+}
+
+.submit {
+  width: 100%;
+  margin-top: var(--s-1);
+}
+
+.alt {
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+
+.demo {
+  border-top: 1px solid var(--line);
+  padding-top: var(--s-5);
+  display: grid;
+  gap: var(--s-2);
+}
+
+.demoTitle {
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+.demoList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1);
+}
+
+.roleHint {
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  margin-top: calc(var(--s-2) * -1);
+}
+
+.footer {
+  padding: var(--s-6) 0;
+  text-align: center;
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+}
+
+@media (max-width: 720px) {
+  .page {
+    padding: 0 var(--s-4);
+  }
+
+  .center {
+    padding: var(--s-8) 0;
+  }
+}
