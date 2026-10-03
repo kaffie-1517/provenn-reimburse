@@ -188,14 +188,17 @@ export function Segmented<T extends string>({
   value,
   options,
   onChange,
+  fill,
 }: {
   label: string;
   value: T;
   options: { value: T; label: string; count?: number }[];
   onChange: (v: T) => void;
+  /** Stretch to the container with equal-width segments. */
+  fill?: boolean;
 }) {
   return (
-    <div className={s.segmented} role="radiogroup" aria-label={label}>
+    <div className={cx(s.segmented, fill && s.fill)} role="radiogroup" aria-label={label}>
       {options.map((o) => (
         <button
           key={o.value}

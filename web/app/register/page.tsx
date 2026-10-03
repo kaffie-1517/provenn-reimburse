@@ -82,6 +82,7 @@ export default function RegisterPage() {
 
           <form className={s.form} onSubmit={submit}>
             <Segmented
+              fill
               label="Account type"
               value={role}
               options={ROLES.map(({ value, label }) => ({ value, label }))}

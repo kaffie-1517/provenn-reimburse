@@ -6,6 +6,7 @@
 }
 
 .panel {
+  min-width: 0;
   position: sticky;
   top: calc(52px + var(--s-6));
   border: 1px solid var(--line);
@@ -21,12 +22,14 @@
 
 .form {
   display: grid;
+  /* minmax(0, …) so a long file name can't widen the column past the panel */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--s-4);
 }
 
 .amountRow {
   display: grid;
-  grid-template-columns: 1fr 96px;
+  grid-template-columns: minmax(0, 1fr) 96px;
   gap: var(--s-2);
   align-items: start;
 }
