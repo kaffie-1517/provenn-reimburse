@@ -18,9 +18,9 @@ def sample_pdf() -> bytes:
     buf = io.BytesIO()
     c = canvas.Canvas(buf, pagesize=A4)
     c.setFont("Helvetica-Bold", 18)
-    c.drawString(72, 760, "Ledgerly Billing — Invoice")
+    c.drawString(72, 760, "Uber India — Trip Receipt")
     c.setFont("Helvetica", 12)
-    c.drawString(72, 730, "Cloud hosting, September: INR 42,000.00")
+    c.drawString(72, 730, "Airport to Cyber City, UberGo: INR 742.50")
     c.showPage()
     c.save()
     return buf.getvalue()
@@ -37,11 +37,11 @@ def main() -> None:
             "/api/v1/partner/invoices",
             headers={"X-Partner-Key": args.key},
             data={
-                "vendor_name": "Ledgerly Billing",
-                "amount_cents": 4_200_000,
+                "vendor_name": "Uber India",
+                "amount_cents": 74_250,
                 "currency": "INR",
                 "invoice_date": date.today().isoformat(),
-                "purchase_ref": "PO-2026-118",
+                "purchase_ref": "UBR-8K2N4T90",
             },
             files={"pdf": ("invoice.pdf", sample_pdf(), "application/pdf")},
         )

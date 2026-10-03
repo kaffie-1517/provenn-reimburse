@@ -88,7 +88,7 @@ function Specimen() {
     <figure className={s.specimen} aria-label="Example: how verification compares files">
       <div className={s.specHead}>
         <span className="mono">PNN-7Q4MZK2D</span>
-        <span className={s.specMeta}>Northwind Traders · ₹42,000.00</span>
+        <span className={s.specMeta}>Taj Hotels · ₹36,981.20</span>
       </div>
       <dl className={s.specRows}>
         <div className={s.specRow}>
@@ -104,7 +104,7 @@ function Specimen() {
         <div className={s.specRow}>
           <dt>
             Edited copy
-            <span className={s.specSub}>₹42,000 → ₹92,000</span>
+            <span className={s.specSub}>₹36,981 → ₹56,981</span>
           </dt>
           <dd className="mono">
             <span className={s.diff}>41b7 0e5d c2f9</span> … 0c9d

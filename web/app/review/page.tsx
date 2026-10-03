@@ -329,7 +329,7 @@ export default function ReviewPage() {
                             </span>
                           </td>
                           <td className={t.truncate}>
-                            <span className={t.primaryCell}>{v.invoice?.vendor_name ?? "Unknown vendor"}</span>
+                            <span className={t.primaryCell}>{v.invoice?.vendor_name ?? v.file_name ?? "Unknown file"}</span>
                             <span className={`${t.sub} mono`}>
                               {v.extracted_code ? refDisplay(v.extracted_code) : "no reference"}
                             </span>

@@ -12,10 +12,10 @@ import s from "../auth.module.css";
 // Set NEXT_PUBLIC_DEMO_PASSWORD to show one-click demo logins (public demos only).
 const DEMO_PASSWORD = process.env.NEXT_PUBLIC_DEMO_PASSWORD || "";
 const DEMO = [
-  ["Provider", "provider@demo.com"],
-  ["Employee", "employee@acme.com"],
-  ["Company admin", "admin@acme.com"],
-  ["Platform admin", "padmin@provenn.io"],
+  ["Employee", "rohan.mehta@northstar.demo"],
+  ["Finance", "priya.sharma@northstar.demo"],
+  ["Vendor", "billing@airindia.demo"],
+  ["Platform admin", "ops@provenn.demo"],
 ] as const;
 
 function safeNext(raw: string | null): string | null {

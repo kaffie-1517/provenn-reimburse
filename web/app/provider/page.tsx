@@ -82,7 +82,7 @@ function IssueForm({ token, onIssued }: { token: string; onIssued: (code: string
         maxLength={200}
         value={vendor}
         onChange={(e) => setVendor(e.target.value)}
-        placeholder="Northwind Traders"
+        placeholder="Air India"
       />
       <div className={s.amountRow}>
         <Field

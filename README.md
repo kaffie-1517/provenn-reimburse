@@ -130,19 +130,29 @@ make worker     # stamps issued invoices
 make web        # http://localhost:3000
 ```
 
-**Demo accounts** (password `password`):
+**Demo accounts** (password `password`). The seed creates two fictional employers, their
+people, airline/hotel vendors and two ride-app billing partners, with a month of claims
+including two forged invoices.
 
-| Role | Email |
-|---|---|
-| Vendor | `provider@demo.com` |
-| Employee | `employee@acme.com` |
-| Finance | `admin@acme.com` |
-| Platform admin | `padmin@provenn.io` |
+| Role | Name | Email |
+|---|---|---|
+| Finance · Northstar Technologies | Priya Sharma | `priya.sharma@northstar.demo` |
+| Employee · Northstar Technologies | Rohan Mehta | `rohan.mehta@northstar.demo` |
+| Employee · Northstar Technologies | Aisha Khan | `aisha.khan@northstar.demo` |
+| Finance · Kavya Retail | Vikram Rao | `vikram.rao@kavyaretail.demo` |
+| Employee · Kavya Retail | Ananya Iyer | `ananya.iyer@kavyaretail.demo` |
+| Vendor | Air India | `billing@airindia.demo` |
+| Vendor | IndiGo | `billing@goindigo.demo` |
+| Vendor | Taj Hotels | `billing@tajhotels.demo` |
+| Platform admin | Platform Ops | `ops@provenn.demo` |
+
+Employees join with the company code `NORTHSTAR` or `KAVYARETAIL`. Uber India and Rapido
+are API partners; `make seed` prints their keys once.
 
 To show one-click demo logins on the sign-in page, set `NEXT_PUBLIC_DEMO_PASSWORD=password`
 in `web/.env.local`.
 
-**Try the partner API.** `make seed` prints a key once:
+**Try the partner API** with one of the printed keys:
 
 ```bash
 make demo KEY=pk_xxxxxxxxxx.your-secret
@@ -204,8 +214,8 @@ Issuing an invoice as a partner:
 curl -X POST http://localhost:8000/api/v1/partner/invoices \
   -H "X-Partner-Key: $PARTNER_KEY" \
   -F pdf=@invoice.pdf \
-  -F vendor_name="Northwind Traders" \
-  -F amount_cents=4200000 -F currency=INR -F invoice_date=2026-10-01
+  -F vendor_name="Uber India" \
+  -F amount_cents=74250 -F currency=INR -F invoice_date=2026-10-01
 # → 202 {"invoice_id": "...", "reference_code": "7Q4MZK2D", "status": "processing"}
 ```
 
