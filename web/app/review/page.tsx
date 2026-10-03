@@ -316,14 +316,17 @@ export default function ReviewPage() {
                             <button
                               className={s.expand}
                               aria-expanded={expanded}
-                              aria-label={`Details for ${v.submitter_email}'s claim`}
+                              aria-label={`Details for ${v.submitter_name}'s claim`}
                               onClick={() => setOpen(expanded ? null : v.id)}
                             >
                               <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
                                 <path d="M3 2l3 3-3 3" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" />
                               </svg>
                             </button>
-                            {v.submitter_email}
+                            <span className={s.who}>
+                              <span className={t.primaryCell}>{v.submitter_name}</span>
+                              <span className={t.sub}>{v.submitter_email}</span>
+                            </span>
                           </td>
                           <td className={t.truncate}>
                             <span className={t.primaryCell}>{v.invoice?.vendor_name ?? "Unknown vendor"}</span>

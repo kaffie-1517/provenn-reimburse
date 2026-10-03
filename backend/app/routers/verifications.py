@@ -34,6 +34,7 @@ def to_out(v: Verification) -> VerificationOut:
         file_name=v.file_name,
         submitted_at=v.submitted_at,
         submitter_email=v.submitter.email,
+        submitter_name=v.submitter.name,
         approved_at=v.approved_at,
         invoice=InvoiceSummary(
             reference_code=inv.reference_code,
@@ -139,7 +140,7 @@ async def export_approved(claims: AdminClaims, session: Session) -> Response:
     approvers = (
         dict(
             (
-                await session.execute(select(User.id, User.email).where(User.id.in_(approver_ids)))
+                await session.execute(select(User.id, User.name).where(User.id.in_(approver_ids)))
             ).all()
         )
         if approver_ids

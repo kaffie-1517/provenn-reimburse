@@ -13,7 +13,8 @@ from app.refcode import display
 
 COLUMNS = [
     ("Submitted", 18),
-    ("Employee", 28),
+    ("Employee", 22),
+    ("Email", 28),
     ("Reference", 14),
     ("Vendor", 28),
     ("Invoice date", 13),
@@ -30,7 +31,7 @@ def _naive(dt: datetime | None) -> datetime | None:
     return dt.replace(tzinfo=None) if dt else None
 
 
-def approved_workbook(rows: Iterable[Verification], approver_emails: dict) -> bytes:
+def approved_workbook(rows: Iterable[Verification], approver_names: dict) -> bytes:
     wb = Workbook()
     ws = wb.active
     ws.title = "Approved"
@@ -50,6 +51,7 @@ def approved_workbook(rows: Iterable[Verification], approver_emails: dict) -> by
         ws.append(
             [
                 _naive(v.submitted_at),
+                v.submitter.name,
                 v.submitter.email,
                 display(inv.reference_code) if inv else None,
                 inv.vendor_name if inv else None,
@@ -58,13 +60,13 @@ def approved_workbook(rows: Iterable[Verification], approver_emails: dict) -> by
                 inv.currency if inv else None,
                 v.result,
                 _naive(v.approved_at),
-                approver_emails.get(v.approved_by),
+                approver_names.get(v.approved_by),
             ]
         )
         r = ws.max_row
-        ws.cell(r, 1).number_format = ws.cell(r, 9).number_format = "yyyy-mm-dd hh:mm"
-        ws.cell(r, 5).number_format = "yyyy-mm-dd"
-        ws.cell(r, 6).number_format = "#,##0.00"
+        ws.cell(r, 1).number_format = ws.cell(r, 10).number_format = "yyyy-mm-dd hh:mm"
+        ws.cell(r, 6).number_format = "yyyy-mm-dd"
+        ws.cell(r, 7).number_format = "#,##0.00"
 
     if ws.max_row > 1:
         ws.auto_filter.ref = ws.dimensions

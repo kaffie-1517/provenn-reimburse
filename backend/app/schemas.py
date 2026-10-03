@@ -13,6 +13,7 @@ class ORM(BaseModel):
 
 
 class RegisterIn(BaseModel):
+    name: str = Field(min_length=2, max_length=120)
     email: EmailStr
     password: str = Field(min_length=8, max_length=128)
     # platform_admin accounts are never self-service.
@@ -29,6 +30,7 @@ class LoginIn(BaseModel):
 
 class UserOut(ORM):
     id: uuid.UUID
+    name: str
     email: str
     role: str
     company_id: uuid.UUID | None
@@ -88,6 +90,7 @@ class VerificationOut(BaseModel):
     file_name: str | None
     submitted_at: datetime
     submitter_email: str
+    submitter_name: str
     approved_at: datetime | None
     invoice: InvoiceSummary | None
 

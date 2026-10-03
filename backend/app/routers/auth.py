@@ -53,6 +53,7 @@ async def register(body: RegisterIn, session: Session) -> SessionOut:
             raise HTTPException(422, "That join code doesn't match any company")
 
     user = User(
+        name=" ".join(body.name.split()),
         email=email,
         password_hash=hash_secret(body.password),
         role=body.role,

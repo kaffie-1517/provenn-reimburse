@@ -33,6 +33,7 @@ async def test_match_mismatch_not_found(client, auth, storage):
     assert ok["invoice"]["reference_code"] == code
     assert ok["invoice"]["amount_cents"] == 150000
     assert ok["submitter_email"] == "emp@acme.example.com"
+    assert ok["submitter_name"] == "Emp"
 
     forged = await submit(client, emp, tamper(original))
     assert forged["result"] == "mismatch"
@@ -116,10 +117,10 @@ async def test_export_contains_only_approved_rows(client, auth, storage):
     ws = load_workbook(io.BytesIO(r.content)).active
     rows = list(ws.iter_rows(min_row=2, values_only=True))
     assert len(rows) == 1
-    assert rows[0][1] == "emp@acme.example.com"
-    assert rows[0][2] == f"PNN-{code}"
-    assert rows[0][5] == 1500.0
-    assert rows[0][9] == "admin@acme.example.com"
+    assert rows[0][1:3] == ("Emp", "emp@acme.example.com")
+    assert rows[0][3] == f"PNN-{code}"
+    assert rows[0][6] == 1500.0
+    assert rows[0][10] == "Admin"
 
     assert (await client.get("/api/v1/verifications/export", headers=acme_emp)).status_code == 403
 

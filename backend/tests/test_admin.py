@@ -9,7 +9,10 @@ from tests.test_verifications import issued_pdf, submit
 async def platform_admin_headers() -> dict:
     async with db.sessionmaker()() as s:
         u = User(
-            email="root@example.com", password_hash=hash_secret("x" * 12), role="platform_admin"
+            name="Platform Ops",
+            email="root@example.com",
+            password_hash=hash_secret("x" * 12),
+            role="platform_admin",
         )
         s.add(u)
         await s.commit()

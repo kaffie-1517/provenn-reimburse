@@ -33,6 +33,7 @@ export default function RegisterPage() {
   const router = useRouter();
   const { ready, user, signIn } = useAuth();
   const [role, setRole] = useState<SignupRole>("employee");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [company, setCompany] = useState("");
@@ -51,6 +52,7 @@ export default function RegisterPage() {
     try {
       const session = await api<Session>("/api/v1/auth/register", {
         json: {
+          name,
           email,
           password,
           role,
@@ -117,6 +119,16 @@ export default function RegisterPage() {
                 hint="Your finance team can find it in their review queue."
               />
             )}
+            <Field
+              label={role === "provider" ? "Business name" : "Full name"}
+              required
+              minLength={2}
+              maxLength={120}
+              autoComplete={role === "provider" ? "organization" : "name"}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={role === "provider" ? "Air India" : "Rohan Mehta"}
+            />
             <Field
               label="Work email"
               type="email"

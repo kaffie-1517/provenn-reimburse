@@ -1,6 +1,7 @@
 async def test_company_admin_creates_workspace_and_employee_joins(client, auth):
     admin = await auth.register("a@acme.example.com", "company_admin", company_name="Acme")
     assert admin["user"]["company_name"] == "Acme"
+    assert admin["user"]["name"] == "A User"
     code = admin["user"]["join_code"]
     assert len(code) == 8
 
@@ -10,7 +11,12 @@ async def test_company_admin_creates_workspace_and_employee_joins(client, auth):
 
 
 async def test_employee_needs_valid_join_code(client):
-    body = {"email": "e@x.example.com", "password": "password123", "role": "employee"}
+    body = {
+        "name": "Rohan Mehta",
+        "email": "e@x.example.com",
+        "password": "password123",
+        "role": "employee",
+    }
     assert (await client.post("/api/v1/auth/register", json=body)).status_code == 422
     body["join_code"] = "NOPE1234"
     r = await client.post("/api/v1/auth/register", json=body)
@@ -21,7 +27,12 @@ async def test_employee_needs_valid_join_code(client):
 async def test_platform_admin_cannot_self_register(client):
     r = await client.post(
         "/api/v1/auth/register",
-        json={"email": "p@x.example.com", "password": "password123", "role": "platform_admin"},
+        json={
+            "name": "M",
+            "email": "p@x.example.com",
+            "password": "pw123456",
+            "role": "platform_admin",
+        },
     )
     assert r.status_code == 422
 
@@ -30,7 +41,12 @@ async def test_duplicate_email_is_conflict(client, auth):
     await auth.register("dup@x.example.com", "provider")
     r = await client.post(
         "/api/v1/auth/register",
-        json={"email": "DUP@x.example.com", "password": "password123", "role": "provider"},
+        json={
+            "name": "Dup",
+            "email": "DUP@x.example.com",
+            "password": "password123",
+            "role": "provider",
+        },
     )
     assert r.status_code == 409
 

@@ -87,6 +87,7 @@ export type Role = "provider" | "employee" | "company_admin" | "platform_admin";
 
 export interface User {
   id: string;
+  name: string;
   email: string;
   role: Role;
   company_id: string | null;
@@ -128,6 +129,7 @@ export interface Verification {
   file_name: string | null;
   submitted_at: string;
   submitter_email: string;
+  submitter_name: string;
   approved_at: string | null;
   invoice: {
     reference_code: string;

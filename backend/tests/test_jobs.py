@@ -69,7 +69,7 @@ async def test_unknown_kind_fails_without_crashing_worker():
 async def test_stamp_invoice_job():
     store = MemoryStorage()
     async with db.sessionmaker()() as s:
-        provider = User(email="p@example.com", password_hash="x", role="provider")
+        provider = User(name="Air India", email="p@example.com", password_hash="x", role="provider")
         s.add(provider)
         await s.flush()
         inv = Invoice(

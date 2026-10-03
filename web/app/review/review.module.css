@@ -184,3 +184,9 @@
     padding-left: 0;
   }
 }
+
+.who {
+  display: inline-block;
+  vertical-align: middle;
+  min-width: 0;
+}

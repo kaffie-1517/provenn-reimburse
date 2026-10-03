@@ -96,6 +96,8 @@ class User(Base):
 
     id: Mapped[uuid.UUID] = _uuid_pk()
     email: Mapped[str] = mapped_column(String(320), unique=True)
+    # A person's name, or the business name for vendor accounts.
+    name: Mapped[str] = mapped_column(String(120))
     password_hash: Mapped[str] = mapped_column(String(100))
     role: Mapped[str] = mapped_column(String(32))
     company_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("companies.id"))

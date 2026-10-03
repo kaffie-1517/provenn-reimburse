@@ -28,7 +28,13 @@ function AccountMenu() {
   }, [open]);
 
   if (!user) return null;
-  const initial = user.email[0]?.toUpperCase();
+  // Sessions saved before names existed only have an email until /me refreshes.
+  const display = user.name || user.email;
+  const initials = display
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase())
+    .join("");
 
   return (
     <div className={s.account} ref={ref}>
@@ -39,14 +45,15 @@ function AccountMenu() {
         onClick={() => setOpen((o) => !o)}
       >
         <span className={s.avatar} aria-hidden>
-          {initial}
+          {initials}
         </span>
-        <span className={s.accountEmail}>{user.email}</span>
+        <span className={s.accountEmail}>{display}</span>
       </button>
       {open && (
         <div className={s.menu} role="menu">
           <div className={s.menuHeader}>
-            <span className={s.menuEmail}>{user.email}</span>
+            <span className={s.menuEmail}>{display}</span>
+            <span className={s.menuRole}>{user.email}</span>
             <span className={s.menuRole}>
               {ROLE_LABEL[user.role]}
               {user.company_name ? ` · ${user.company_name}` : ""}

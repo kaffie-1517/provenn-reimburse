@@ -64,7 +64,13 @@ class Auth:
     async def register(self, email: str, role: str, **extra) -> dict:
         r = await self.client.post(
             "/api/v1/auth/register",
-            json={"email": email, "password": "password123", "role": role, **extra},
+            json={
+                "name": _name_from(email),
+                "email": email,
+                "password": "password123",
+                "role": role,
+                **extra,
+            },
         )
         assert r.status_code == 201, r.text
         return r.json()
@@ -78,6 +84,12 @@ class Auth:
 
     async def provider(self, email: str = "provider@example.com") -> dict:
         return _h(await self.register(email, "provider"))
+
+
+def _name_from(email: str) -> str:
+    """'rohan.mehta@x' -> 'Rohan Mehta'; very short locals get padded to stay valid."""
+    name = email.split("@")[0].replace(".", " ").title()
+    return name if len(name) >= 2 else f"{name} User"
 
 
 def _h(session: dict) -> dict:
