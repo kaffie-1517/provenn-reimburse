@@ -2,8 +2,9 @@
 
 Issuing:   stamp(raw, code) -> QR + "PNN-XXXXXXXX" footer on every page,
            then with_marker() appends a plain-text marker, then sha256().
-Verifying: find_code(submitted) tries the marker, the page text, then any
-           QR code in the page images (covers printed-and-scanned copies).
+Verifying: candidate_codes() / qr_codes() list every code found (marker,
+           metadata, page text, QR images), newest stamp first; the
+           verifier uses the first one that was actually issued.
 """
 
 import hashlib
@@ -19,6 +20,7 @@ from reportlab.lib.colors import Color
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 
+from app import refcode
 from app.refcode import display
 
 log = logging.getLogger(__name__)
@@ -120,24 +122,41 @@ def with_marker(pdf: bytes, code: str) -> bytes:
 
 
 # ── verifying ───────────────────────────────────────────────────────────────
+#
+# A file can carry more than one code: an invoice that was stamped twice, or a
+# stale stamp copied in from another PDF. So extraction returns *candidates*,
+# newest stamp first, and the caller keeps the first one that was really issued.
 
 
-def _from_marker(data: bytes) -> str | None:
-    found = _MARKER_RE.findall(data)
-    return found[-1].decode() if found else None
+def _dedupe(codes: list[str]) -> list[str]:
+    return list(dict.fromkeys(codes))
 
 
-def _from_text(reader: PdfReader) -> str | None:
+def _from_marker(data: bytes) -> list[str]:
+    # Markers are appended, so the last one is the newest.
+    return [c.decode() for c in reversed(_MARKER_RE.findall(data))]
+
+
+def _from_metadata(reader: PdfReader) -> list[str]:
+    try:
+        code = (reader.metadata or {}).get("/ProveNNReference")
+    except Exception:
+        return []
+    return [str(code)] if code and refcode.CODE_RE.match(str(code)) else []
+
+
+def _from_text(reader: PdfReader) -> list[str]:
+    codes: list[str] = []
     for page in reader.pages[:5]:
-        m = _TEXT_RE.search(page.extract_text() or "")
-        if m:
-            return m.group(1)
-    return None
+        # A later stamp is drawn after an earlier one, so read matches backwards.
+        codes += reversed(_TEXT_RE.findall(page.extract_text() or ""))
+    return codes
 
 
-def _from_qr(reader: PdfReader) -> str | None:
+def _from_qr(reader: PdfReader) -> list[str]:
     import zxingcpp  # imported lazily: native module, only needed here
 
+    codes: list[str] = []
     for page in reader.pages[:5]:
         for img in page.images:
             try:
@@ -147,21 +166,43 @@ def _from_qr(reader: PdfReader) -> str | None:
             if pil is None:
                 continue
             for hit in zxingcpp.read_barcodes(pil):
-                m = _QR_RE.search(hit.text)
-                if m:
-                    return m.group(1)
-    return None
+                codes += _QR_RE.findall(hit.text)
+    return list(reversed(codes))
+
+
+def _reader(data: bytes) -> PdfReader | None:
+    try:
+        reader = PdfReader(io.BytesIO(data))
+        return None if reader.is_encrypted else reader
+    except Exception as e:  # a broken upload is a not_found, never a 500
+        log.info("unreadable PDF: %s", e)
+        return None
+
+
+def candidate_codes(data: bytes) -> list[str]:
+    """Cheap candidates, newest first: trailing marker, metadata, page text."""
+    codes = _from_marker(data)
+    reader = _reader(data)
+    if reader is not None:
+        try:
+            codes += _from_metadata(reader) + _from_text(reader)
+        except Exception as e:
+            log.info("text extraction failed: %s", e)
+    return _dedupe(codes)
+
+
+def qr_codes(data: bytes) -> list[str]:
+    """Slower fallback: decode QR codes in page images (printed-and-scanned copies)."""
+    reader = _reader(data)
+    if reader is None:
+        return []
+    try:
+        return _dedupe(_from_qr(reader))
+    except Exception as e:
+        log.info("QR extraction failed: %s", e)
+        return []
 
 
 def find_code(data: bytes) -> str | None:
-    """Best-effort reference code extraction from a submitted file."""
-    if code := _from_marker(data):
-        return code
-    try:
-        reader = PdfReader(io.BytesIO(data))
-        if reader.is_encrypted:
-            return None
-        return _from_text(reader) or _from_qr(reader)
-    except Exception as e:  # a broken upload is a not_found, never a 500
-        log.info("find_code: unreadable PDF: %s", e)
-        return None
+    """The single most likely reference code, without checking it was issued."""
+    return next(iter(candidate_codes(data) or qr_codes(data)), None)

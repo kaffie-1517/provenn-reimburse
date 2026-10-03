@@ -136,3 +136,41 @@ async def test_only_employees_submit(client, auth, storage):
             headers=h,
         )
         assert r.status_code == 403
+
+
+async def test_edited_in_a_pdf_editor_is_mismatch_not_not_found(client, auth, storage):
+    from tests.test_pdf import resave
+
+    code, original = await issued_pdf(client, auth, storage)
+    _, emp = await auth.company("acme")
+    edited = resave(original, (b"1,500.00", b"9,500.00"))
+    v = await submit(client, emp, edited)
+    assert v["result"] == "mismatch"
+    assert v["extracted_code"] == code
+
+
+async def test_stale_second_stamp_resolves_to_issued_code(client, auth, storage):
+    from app import pdf as pdfmod
+    from tests.test_pdf import resave
+
+    code, original = await issued_pdf(client, auth, storage)
+    # A stamp from an invoice that was never issued here, layered on top.
+    doubled = resave(pdfmod.stamp(original, "ZZZZ2345"))
+    _, emp = await auth.company("acme")
+    v = await submit(client, emp, doubled)
+    assert v["extracted_code"] == code
+    assert v["result"] == "mismatch"
+
+
+async def test_issuing_an_already_stamped_pdf_is_refused(client, auth, storage):
+    from tests.test_invoices import FORM
+
+    code, original = await issued_pdf(client, auth, storage)
+    r = await client.post(
+        "/api/v1/invoices",
+        data=FORM,
+        files={"pdf": ("again.pdf", original, "application/pdf")},
+        headers=await auth.provider("second@example.com"),
+    )
+    assert r.status_code == 422
+    assert f"PNN-{code}" in r.json()["detail"]

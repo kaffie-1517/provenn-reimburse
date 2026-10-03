@@ -1,7 +1,7 @@
 import io
 
 import pytest
-from pypdf import PdfReader
+from pypdf import PdfReader, PdfWriter
 
 from app import pdf, refcode
 from tests.pdfs import invoice_pdf, tamper
@@ -33,9 +33,9 @@ def test_code_round_trip(finder):
     if finder == "marker":
         assert pdf.find_code(pdf.with_marker(stamped, "QRST2345")) == "QRST2345"
     elif finder == "text":
-        assert pdf._from_text(reader) == "QRST2345"
+        assert pdf._from_text(reader) == ["QRST2345"]
     else:
-        assert pdf._from_qr(reader) == "QRST2345"
+        assert pdf._from_qr(reader) == ["QRST2345"]
 
 
 def test_marker_is_idempotent_and_file_still_opens():
@@ -90,3 +90,30 @@ def test_connect_options_for_hosted_postgres():
 
     url, args = connect_options("postgresql+asyncpg://u@localhost/app")
     assert (url, args) == ("postgresql+asyncpg://u@localhost/app", {})
+
+
+def resave(data: bytes, edit: tuple[bytes, bytes] | None = None) -> bytes:
+    """What an online PDF editor does: parse and rewrite the whole file,
+    which drops anything after the original trailer (our marker included)."""
+    if edit:
+        data = data.replace(*edit)
+    writer = PdfWriter(clone_from=PdfReader(io.BytesIO(data)))
+    out = io.BytesIO()
+    writer.write(out)
+    return out.getvalue()
+
+
+def test_code_survives_an_editor_rewrite():
+    issued = pdf.with_marker(pdf.stamp(invoice_pdf(), "ABCD2345"), "ABCD2345")
+    edited = resave(issued, (b"1,500.00", b"9,500.00"))
+    assert b"% REF:" not in edited  # marker gone, like a real editor
+    assert pdf.find_code(edited) == "ABCD2345"
+    assert pdf.sha256(edited) != pdf.sha256(issued)
+
+
+def test_double_stamp_lists_newest_code_first():
+    once = pdf.with_marker(pdf.stamp(invoice_pdf(), "OLDC2345"), "OLDC2345")
+    twice = pdf.with_marker(pdf.stamp(once, "NEWC2345"), "NEWC2345")
+    assert pdf.candidate_codes(twice)[0] == "NEWC2345"
+    # Even after an editor strips the marker, the newest stamp wins.
+    assert pdf.candidate_codes(resave(twice))[:2] == ["NEWC2345", "OLDC2345"]

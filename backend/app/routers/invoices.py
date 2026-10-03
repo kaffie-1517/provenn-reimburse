@@ -67,6 +67,13 @@ async def _issue(
     source: str,
 ) -> InvoiceIssued:
     raw = await read_pdf_upload(form.pdf_file)
+    if existing := pdf.candidate_codes(raw):
+        # Re-stamping an issued invoice would give one document two identities.
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_CONTENT,
+            f"This PDF was already issued through ProveNN as {refcode.display(existing[0])}. "
+            "Upload the original invoice instead.",
+        )
     invoice_id = uuid.uuid4()
     # Upload first: if the DB insert then fails we only leave an orphan file,
     # never a job that points at a missing one.

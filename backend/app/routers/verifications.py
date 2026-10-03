@@ -53,6 +53,32 @@ def _file_name(upload: UploadFile) -> str | None:
     return name[:255] or None
 
 
+async def _first_issued(session, codes: list[str]) -> Invoice | None:
+    if not codes:
+        return None
+    found = {
+        inv.reference_code: inv
+        for inv in await session.scalars(select(Invoice).where(Invoice.reference_code.in_(codes)))
+    }
+    return next((found[c] for c in codes if c in found), None)
+
+
+async def _resolve_invoice(session, data: bytes) -> tuple[Invoice | None, str | None]:
+    """Finds which issued invoice a submitted file claims to be.
+
+    Tries every code in the file (newest stamp first) and keeps the first one
+    that was really issued, so a stale or doubled stamp can't hide the right
+    one. QR decoding is slower, so it only runs when the cheap sources fail.
+    """
+    codes = await asyncio.to_thread(pdf.candidate_codes, data)
+    invoice = await _first_issued(session, codes)
+    if invoice is None:
+        qr = [c for c in await asyncio.to_thread(pdf.qr_codes, data) if c not in codes]
+        invoice = await _first_issued(session, qr)
+        codes += qr
+    return invoice, invoice.reference_code if invoice else next(iter(codes), None)
+
+
 @router.post("", status_code=status.HTTP_201_CREATED)
 async def submit(
     claims: EmployeeClaims,
@@ -61,11 +87,7 @@ async def submit(
 ) -> VerificationOut:
     data = await read_pdf_upload(pdf_file)
     digest = pdf.sha256(data)
-    code = await asyncio.to_thread(pdf.find_code, data)
-
-    invoice = None
-    if code:
-        invoice = await session.scalar(select(Invoice).where(Invoice.reference_code == code))
+    invoice, code = await _resolve_invoice(session, data)
 
     matched = None
     if invoice is None:
